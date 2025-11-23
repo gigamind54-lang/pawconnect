@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HeartIcon, ShareIcon, MapPinIcon, BookmarkIcon, MessageIcon, UserIcon } from '@/components/Icons';
 import './AdoptionCard.css';
 
@@ -8,13 +8,12 @@ export default function AdoptionCard({ post, onLike, onSave }) {
     const [isSaved, setIsSaved] = useState(false);
     const [likeCount, setLikeCount] = useState(post.likes || 0);
 
+    // Sync with updated post data from database
+    useEffect(() => {
+        setLikeCount(post.likes || 0);
+    }, [post.likes]);
+
     const handleLike = () => {
-        if (!isLiked) {
-            setLikeCount(likeCount + 1);
-        } else {
-            setLikeCount(likeCount - 1);
-        }
-        setIsLiked(!isLiked);
         if (onLike) onLike(post.id, !isLiked);
     };
 

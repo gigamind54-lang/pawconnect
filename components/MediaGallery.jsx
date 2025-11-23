@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HeartIcon, MessageIcon, ShareIcon, ImageIcon as ImageIconComp, UserIcon, ClockIcon } from '@/components/Icons';
 import './MediaGallery.css';
 
@@ -9,18 +9,17 @@ export default function MediaGallery({ post, onLike }) {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(post.likes || 0);
 
+    // Sync with updated post data
+    useEffect(() => {
+        setLikeCount(post.likes || 0);
+    }, [post.likes]);
+
     const openLightbox = (image) => {
         setCurrentImage(image);
         setLightboxOpen(true);
     };
 
     const handleLike = () => {
-        if (!isLiked) {
-            setLikeCount(likeCount + 1);
-        } else {
-            setLikeCount(likeCount - 1);
-        }
-        setIsLiked(!isLiked);
         if (onLike) onLike(post.id, !isLiked);
     };
 
