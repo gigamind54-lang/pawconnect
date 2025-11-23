@@ -178,21 +178,49 @@ export default function Home() {
     console.log(`Post ${postId} ${saved ? 'saved' : 'unsaved'}`);
   };
 
+  const handleDelete = async (postId) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        // Reload posts after deletion
+        await loadPostsFromAPI();
+      } else {
+        alert('Failed to delete post');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Failed to delete post');
+    }
+  };
+
   const filteredPosts = filterType === 'all'
     ? posts
-    : posts.filter(post => post.type === filterType); // Changed from post.category to post.type
+    : posts.filter(post => post.type === filterType);
 
   const renderPost = (post) => {
+    // Mark if current user owns this post
+    const enrichedPost = {
+      ...post,
+      isOwner: currentUser && (post.userId === currentUser.id || post.user_id === currentUser.id),
+      onDelete: handleDelete
+    };
+
     // API returns 'type' not 'category'
     switch (post.type) {
       case 'adoption':
-        return <AdoptionCard key={post.id} post={post} onLike={handleLike} onSave={handleSave} />;
+        return <AdoptionCard key={post.id} post={enrichedPost} onLike={handleLike} onSave={handleSave} />;
       case 'discussion':
-        return <DiscussionCard key={post.id} post={post} onLike={handleLike} />;
+        return <DiscussionCard key={post.id} post={enrichedPost} onLike={handleLike} />;
       case 'help':
-        return <HelpRequestCard key={post.id} post={post} />;
+        return <HelpRequestCard key={post.id} post={enrichedPost} />;
       case 'media':
-        return <MediaGallery key={post.id} post={post} onLike={handleLike} />;
+        return <MediaGallery key={post.id} post={enrichedPost} onLike={handleLike} />;
       default:
         return null;
     }

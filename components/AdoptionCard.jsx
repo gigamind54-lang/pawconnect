@@ -40,6 +40,16 @@ export default function AdoptionCard({ post, onLike, onSave }) {
         }
     };
 
+    const handleDelete = async () => {
+        if (!window.confirm('Are you sure you want to delete this post?')) {
+            return;
+        }
+
+        if (post.onDelete) {
+            post.onDelete(post.id);
+        }
+    };
+
     return (
         <article className="instagram-card">
             {/* Header */}
@@ -60,6 +70,16 @@ export default function AdoptionCard({ post, onLike, onSave }) {
                         </div>
                     </div>
                 </div>
+                {post.isOwner && (
+                    <button
+                        onClick={handleDelete}
+                        className="ig-delete-btn"
+                        aria-label="Delete post"
+                        title="Delete post"
+                    >
+                        ×
+                    </button>
+                )}
             </div>
 
             {/* Image */}
