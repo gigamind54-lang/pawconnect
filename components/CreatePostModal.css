@@ -16,15 +16,33 @@
 
 .modal-content {
     background: #ffffff;
-    border-radius: var(--radius-lg);
+    border-radius: 12px;
     width: 90%;
-    max-width: 500px;
+    max-width: 600px;
     max-height: 90vh;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     position: relative;
     display: flex;
     flex-direction: column;
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .dark-mode .modal-content {
