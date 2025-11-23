@@ -68,7 +68,11 @@ export default function AdoptionCard({ post, onLike, onSave }) {
                     <HeartIcon size={14} filled={true} />
                     <span>Adoption</span>
                 </div>
-                <img src={post.image} alt={post.petName} className="ig-image" />
+                <img
+                    src={post.images && post.images[0] ? post.images[0] : 'https://images.unsplash.com/photo-1600077106724-946750eeaf8c?w=800'}
+                    alt={post.petName || post.pet_name}
+                    className="ig-image"
+                />
                 {post.urgent && (
                     <div className="badge badge-urgent ig-badge">URGENT</div>
                 )}
@@ -112,7 +116,7 @@ export default function AdoptionCard({ post, onLike, onSave }) {
 
             {/* Caption */}
             <div className="ig-caption">
-                <strong>{post.petName}</strong>
+                <strong>{post.petName || post.pet_name}</strong>
                 <span className="ig-caption-text">
                     {' '}{post.breed} • {post.age} • {post.gender}
                 </span>

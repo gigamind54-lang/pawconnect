@@ -43,7 +43,7 @@ export default function MediaGallery({ post, onLike }) {
                 </div>
 
                 <div className="media-grid">
-                    {post.media.slice(0, 4).map((item, index) => (
+                    {(post.images || post.media || []).slice(0, 4).map((item, index) => (
                         <div
                             key={index}
                             className="media-item"
@@ -53,9 +53,9 @@ export default function MediaGallery({ post, onLike }) {
                             <div className="media-overlay">
                                 <ImageIconComp size={32} />
                             </div>
-                            {index === 3 && post.media.length > 4 && (
+                            {index === 3 && (post.images || post.media || []).length > 4 && (
                                 <div className="more-overlay">
-                                    +{post.media.length - 4}
+                                    +{(post.images || post.media || []).length - 4}
                                 </div>
                             )}
                         </div>

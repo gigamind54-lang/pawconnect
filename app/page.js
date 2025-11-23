@@ -180,10 +180,11 @@ export default function Home() {
 
   const filteredPosts = filterType === 'all'
     ? posts
-    : posts.filter(post => post.category === filterType);
+    : posts.filter(post => post.type === filterType); // Changed from post.category to post.type
 
   const renderPost = (post) => {
-    switch (post.category) {
+    // API returns 'type' not 'category'
+    switch (post.type) {
       case 'adoption':
         return <AdoptionCard key={post.id} post={post} onLike={handleLike} onSave={handleSave} />;
       case 'discussion':
