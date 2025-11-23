@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { HomeIcon, HeartIcon, MessageIcon, HelpCircleIcon, ImageIcon } from '@/components/Icons';
 import { useUser } from '@/context/UserContext';
+import { fetchPosts, createPost, toggleLike } from '@/lib/api';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import AdoptionCard from '@/components/AdoptionCard';
@@ -14,7 +15,7 @@ import UserProfile from '@/components/UserProfile';
 import './page.css';
 
 export default function Home() {
-  const { currentUser, isAuthenticated, register, login, logout, updateProfile, incrementPostCount } = useUser();
+  const { currentUser, isAuthenticated, token, register, login, logout, updateProfile, incrementPostCount } = useUser();
   const [darkMode, setDarkMode] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -22,17 +23,25 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const [activeTab, setActiveTab] = useState('home');
+  const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState('');
 
-  // Load posts from localStorage on mount
+  // Fetch posts from API on mount
   useEffect(() => {
-    const savedPosts = localStorage.getItem('petCommunityPosts');
-    if (savedPosts) {
-      setPosts(JSON.parse(savedPosts));
-    } else {
-      setPosts(samplePosts);
-      localStorage.setItem('petCommunityPosts', JSON.stringify(samplePosts));
-    }
+    loadPostsFromAPI();
   }, []);
+
+  const loadPostsFromAPI = async () => {
+    try {
+      setLoading(true);
+      const apiPosts = await fetchPosts();
+      setPosts(apiPosts);
+    } catch (error) {
+      console.error('Error loading posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Dark mode effect
   useEffect(() => {
@@ -43,56 +52,81 @@ export default function Home() {
     }
   }, [darkMode]);
 
-  const handleCreatePost = (newPost) => {
+  const handleCreatePost = async (newPost) => {
     if (!isAuthenticated) {
       setAuthModalOpen(true);
       return;
     }
 
-    const post = {
-      id: Date.now(),
-      ...newPost,
-      timeAgo: 'Just now',
-      author: currentUser.username,
-      authorAvatar: currentUser.avatar,
-      authorEmail: currentUser.email,
-      authorId: currentUser.id,
-      likes: 0,
-      comments: 0,
-      views: 0,
-      responses: 0,
-      status: 'open',
-      tags: newPost.tags || [],
+    // Prepare post data for API
+    const postData = {
+      type: newPost.category,
+      title: newPost.title,
+      description: newPost.description,
+      images: newPost.image ? [newPost.image] : [],
+      location: newPost.location,
+      details: {}
     };
 
-    const updatedPosts = [post, ...posts];
-    setPosts(updatedPosts);
-    localStorage.setItem('petCommunityPosts', JSON.stringify(updatedPosts));
-    incrementPostCount();
-    setModalOpen(false);
-  };
-  const [authError, setAuthError] = useState('');
+    // Add type-specific details
+    if (newPost.category === 'adoption') {
+      postData.details = {
+        petName: newPost.petName,
+        species: newPost.species,
+        breed: newPost.breed,
+        age: newPost.age,
+        gender: newPost.gender,
+        size: newPost.size,
+        urgent: newPost.urgent || false
+      };
+    } else if (newPost.category === 'discussion') {
+      postData.details = {
+        tags: newPost.tags || [],
+        isPopular: false
+      };
+    } else if (newPost.category === 'help') {
+      postData.details = {
+        helpType: newPost.helpType,
+        urgencyLevel: newPost.urgencyLevel || 'normal',
+        status: 'open'
+      };
+    }
 
-  const handleAuth = (type, data) => {
+    // Call API
+    const result = await createPost(postData, token);
+
+    if (result.success) {
+      // Reload posts from API
+      await loadPostsFromAPI();
+      incrementPostCount();
+      setModalOpen(false);
+    } else {
+      alert('Failed to create post: ' + (result.error || 'Unknown error'));
+    }
+  };
+
+  const handleAuth = async (type, data) => {
     console.log('handleAuth called:', { type, data });
     setAuthError('');
 
     if (type === 'register') {
-      const result = register(data);
+      const result = await register(data);
       console.log('Register result:', result);
       if (result.success) {
         setAuthModalOpen(false);
         setAuthError('');
+        await loadPostsFromAPI(); // Reload posts after login
       } else {
         setAuthError(result.error || 'Registration failed');
         console.log('Registration error:', result.error);
       }
     } else {
-      const result = login(data.email, data.password);
+      const result = await login(data.email, data.password);
       console.log('Login result:', result);
       if (result.success) {
         setAuthModalOpen(false);
         setAuthError('');
+        await loadPostsFromAPI(); // Reload posts after login
       } else {
         setAuthError(result.error || 'Login failed');
         console.log('Login error:', result.error);
@@ -120,8 +154,19 @@ export default function Home() {
     setActiveTab(tab);
   };
 
-  const handleLike = (postId, liked) => {
-    console.log(`Post ${postId} ${liked ? 'liked' : 'unliked'}`);
+  const handleLike = async (postId, liked) => {
+    if (!isAuthenticated) {
+      setAuthModalOpen(true);
+      return;
+    }
+
+    // Call API to toggle like
+    const result = await toggleLike(postId, token);
+
+    if (result.success) {
+      // Reload posts to get updated like count
+      await loadPostsFromAPI();
+    }
   };
 
   const handleSave = (postId, saved) => {
