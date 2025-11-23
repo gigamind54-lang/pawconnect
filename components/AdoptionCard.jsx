@@ -75,9 +75,8 @@ export default function AdoptionCard({ post, onLike, onSave }) {
                         onClick={handleDelete}
                         className="ig-delete-btn"
                         aria-label="Delete post"
-                        title="Delete post"
                     >
-                        ×
+                        Delete this post
                     </button>
                 )}
             </div>

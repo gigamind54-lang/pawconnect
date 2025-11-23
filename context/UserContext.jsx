@@ -104,11 +104,30 @@ export function UserProvider({ children }) {
     };
 
     const updateProfile = async (updates) => {
-        // Note: This would require a PUT /api/users/[id] endpoint
-        // For now, just update locally
-        const updatedUser = { ...currentUser, ...updates };
-        setCurrentUser(updatedUser);
-        return { success: true, user: updatedUser };
+        if (!currentUser) return { success: false, error: 'Not authenticated' };
+
+        try {
+            const response = await fetch(`/api/users/${currentUser.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updates)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setCurrentUser(data.user);
+                return { success: true, user: data.user };
+            } else {
+                return { success: false, error: data.error };
+            }
+        } catch (error) {
+            console.error('Update profile error:', error);
+            return { success: false, error: 'Failed to update profile' };
+        }
     };
 
     const incrementPostCount = () => {
