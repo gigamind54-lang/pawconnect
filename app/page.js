@@ -63,7 +63,9 @@ export default function Home() {
       type: newPost.category,
       title: newPost.title,
       description: newPost.description,
-      images: newPost.image ? [newPost.image] : [],
+      images: newPost.media && newPost.media.length > 0
+        ? newPost.media // Use media array for media posts
+        : (newPost.image ? [newPost.image] : []), // Or single image
       location: newPost.location,
       details: {}
     };
@@ -90,6 +92,9 @@ export default function Home() {
         urgencyLevel: newPost.urgencyLevel || 'normal',
         status: 'open'
       };
+    } else if (newPost.category === 'media') {
+      // Media posts don't need extra details, images are in the images array
+      postData.details = {};
     }
 
     // Call API
