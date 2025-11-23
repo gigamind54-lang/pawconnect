@@ -1,0 +1,262 @@
+.instagram-card {
+    background: var(--ig-bg);
+    border-bottom: 1px solid var(--ig-border);
+    margin-bottom: 12px;
+    border-radius: 0;
+}
+
+.dark-mode .instagram-card {
+    background: var(--ig-dark-bg);
+    border-bottom-color: var(--ig-dark-border);
+}
+
+.help-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    color: white;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.help-tag svg {
+    color: white;
+}
+
+.help-tag-urgent {
+    background: rgba(237, 73, 86, 0.95);
+}
+
+.help-tag-normal {
+    background: rgba(255, 169, 77, 0.95);
+}
+
+.help-tag-low {
+    background: rgba(42, 157, 143, 0.95);
+}
+
+.help-placeholder {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    color: white;
+    position: relative;
+}
+
+.help-placeholder-urgent {
+    background: linear-gradient(135deg, #E63946 0%, #d62839 100%);
+}
+
+.help-placeholder-normal {
+    background: linear-gradient(135deg, #FFA94D 0%, #ff9a2e 100%);
+}
+
+.help-placeholder-low {
+    background: linear-gradient(135deg, #2A9D8F 0%, #238276 100%);
+}
+
+.help-placeholder svg {
+    opacity: 0.3;
+}
+
+.help-title-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-xl);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+/* Shared Instagram card styles */
+.ig-card-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ig-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ig-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ig-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--ig-bg);
+}
+
+.dark-mode .ig-avatar img {
+    border-color: var(--ig-dark-bg);
+}
+
+.ig-user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ig-username {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ig-text-primary);
+}
+
+.dark-mode .ig-username {
+    color: var(--ig-dark-text-primary);
+}
+
+.ig-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--ig-text-secondary);
+}
+
+.dark-mode .ig-location {
+    color: var(--ig-dark-text-secondary);
+}
+
+.ig-image-container {
+    position: relative;
+    width: 100%;
+    background: var(--ig-bg-secondary);
+}
+
+.dark-mode .ig-image-container {
+    background: var(--ig-dark-bg-secondary);
+}
+
+.ig-likes {
+    padding: 0 16px 8px;
+    font-size: 14px;
+    color: var(--ig-text-primary);
+}
+
+.dark-mode .ig-likes {
+    color: var(--ig-dark-text-primary);
+}
+
+.ig-caption {
+    padding: 0 16px;
+    font-size: 14px;
+    color: var(--ig-text-primary);
+    line-height: 18px;
+}
+
+.dark-mode .ig-caption {
+    color: var(--ig-dark-text-primary);
+}
+
+.ig-caption strong {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.ig-caption-text {
+    color: var(--ig-text-secondary);
+}
+
+.dark-mode .ig-caption-text {
+    color: var(--ig-dark-text-secondary);
+}
+
+.ig-description {
+    padding: 4px 16px;
+    font-size: 14px;
+    color: var(--ig-text-primary);
+    line-height: 18px;
+}
+
+.dark-mode .ig-description {
+    color: var(--ig-dark-text-primary);
+}
+
+.ig-time {
+    padding: 0 16px 14px;
+    font-size: 10px;
+    color: var(--ig-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+.dark-mode .ig-time {
+    color: var(--ig-dark-text-secondary);
+}
+
+/* Help-specific actions */
+.ig-action-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ig-text-secondary);
+}
+
+.dark-mode .ig-action-text {
+    color: var(--ig-dark-text-secondary);
+}
+
+.help-offer-btn {
+    padding: 6px 16px;
+    background: transparent;
+    color: var(--ig-blue);
+    border: 1px solid var(--ig-blue);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.help-offer-btn:hover {
+    background: var(--ig-blue);
+    color: white;
+}
+
+.help-offer-btn:active {
+    opacity: 0.8;
+}
+
+/* For urgent help posts */
+.help-tag-urgent+.help-placeholder-urgent~.ig-actions .help-offer-btn {
+    color: var(--ig-red);
+    border-color: var(--ig-red);
+}
+
+.help-tag-urgent+.help-placeholder-urgent~.ig-actions .help-offer-btn:hover {
+    background: var(--ig-red);
+    color: white;
+}

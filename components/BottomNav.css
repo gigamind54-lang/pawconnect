@@ -1,0 +1,100 @@
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: #ffffff;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 var(--spacing-sm);
+    z-index: 100;
+}
+
+.dark-mode .bottom-nav {
+    background: #000000;
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #262626;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    padding: 0;
+}
+
+.dark-mode .nav-item {
+    color: #ffffff;
+}
+
+.nav-item:active {
+    transform: scale(0.9);
+}
+
+.nav-item.active {
+    color: #000000;
+}
+
+.dark-mode .nav-item.active {
+    color: #ffffff;
+}
+
+.nav-item svg {
+    stroke-width: 1.5;
+}
+
+.nav-item.active svg {
+    stroke-width: 2.5;
+}
+
+.create-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 2px solid currentColor;
+    border-radius: 6px;
+}
+
+.profile-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #dbdbdb;
+}
+
+.dark-mode .profile-avatar {
+    border-color: #363636;
+}
+
+.profile-avatar.active {
+    border: 2px solid #000000;
+}
+
+.dark-mode .profile-avatar.active {
+    border-color: #ffffff;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Desktop - hide bottom nav */
+@media (min-width: 769px) {
+    .bottom-nav {
+        display: none;
+    }
+}

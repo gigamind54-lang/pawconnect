@@ -1,26 +1,262 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Instagram-style Colors */
+  --ig-bg: #ffffff;
+  --ig-bg-secondary: #fafafa;
+  --ig-border: #dbdbdb;
+  --ig-text-primary: #262626;
+  --ig-text-secondary: #8e8e8e;
+  --ig-blue: #0095f6;
+  --ig-blue-hover: #1877f2;
+  --ig-red: #ed4956;
+
+  /* Dark Mode */
+  --ig-dark-bg: #000000;
+  --ig-dark-bg-secondary: #121212;
+  --ig-dark-border: #363636;
+  --ig-dark-text-primary: #ffffff;
+  --ig-dark-text-secondary: #a8a8a8;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Radius */
+  --radius-sm: 3px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 50%;
+
+  /* Transitions */
+  --transition-fast: 0.15s;
+  --transition-base: 0.2s;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--ig-bg);
+  color: var(--ig-text-primary);
+  line-height: 1.5;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+
+body.dark-mode {
+  background: var(--ig-dark-bg);
+  color: var(--ig-dark-text-primary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ig-border);
+  border-radius: 4px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--ig-dark-border);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--ig-blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--ig-blue-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ig-text-primary);
+  border: 1px solid var(--ig-border);
+}
+
+.dark-mode .btn-secondary {
+  color: var(--ig-dark-text-primary);
+  border-color: var(--ig-dark-border);
+}
+
+.btn-secondary:hover {
+  background: var(--ig-bg-secondary);
+}
+
+.dark-mode .btn-secondary:hover {
+  background: var(--ig-dark-bg-secondary);
+}
+
+/* Card */
+.card {
+  background: var(--ig-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: 0;
+  margin-bottom: var(--spacing-md);
+}
+
+.dark-mode .card {
+  background: var(--ig-dark-bg);
+  border-color: var(--ig-dark-border);
+}
+
+.card-content {
+  padding: var(--spacing-md);
+}
+
+/* Input */
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-sm);
+  background: var(--ig-bg);
+  color: var(--ig-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color var(--transition-base);
+}
+
+.dark-mode .form-input,
+.dark-mode .form-textarea,
+.dark-mode .form-select {
+  background: var(--ig-dark-bg);
+  border-color: var(--ig-dark-border);
+  color: var(--ig-dark-text-primary);
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--ig-text-secondary);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ig-text-primary);
+}
+
+.dark-mode .form-label {
+  color: var(--ig-dark-text-primary);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Utilities */
+.file-input {
+  display: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Remove old gradients and effects */
+.glass-card {
+  background: var(--ig-bg);
+  border: 1px solid var(--ig-border);
+}
+
+.dark-mode .glass-card {
+  background: var(--ig-dark-bg);
+  border-color: var(--ig-dark-border);
+}
+
+.gradient-text {
+  color: var(--ig-text-primary);
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+}
+
+.dark-mode .gradient-text {
+  color: var(--ig-dark-text-primary);
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-urgent {
+  background: var(--ig-red);
+  color: white;
+}
+
+.badge-category {
+  background: var(--ig-bg-secondary);
+  color: var(--ig-text-secondary);
+  border: 1px solid var(--ig-border);
+}
+
+.dark-mode .badge-category {
+  background: var(--ig-dark-bg-secondary);
+  color: var(--ig-dark-text-secondary);
+  border-color: var(--ig-dark-border);
 }
