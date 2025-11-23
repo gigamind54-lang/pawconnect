@@ -6,6 +6,7 @@ import './CreatePostModal.css';
 export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
     const [activeTab, setActiveTab] = useState('adoption');
     const [uploadedImages, setUploadedImages] = useState([]);
+    const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         petName: '',
         breed: '',
@@ -27,10 +28,39 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
         });
     };
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         const files = Array.from(e.target.files);
-        const imageUrls = files.map(file => URL.createObjectURL(file));
-        setUploadedImages([...uploadedImages, ...imageUrls]);
+        if (files.length === 0) return;
+
+        setUploading(true);
+
+        try {
+            // Upload each file to Vercel Blob
+            const uploadPromises = files.map(async (file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
+
+                const data = await response.json();
+                return data.url; // Return the blob URL
+            });
+
+            const uploadedUrls = await Promise.all(uploadPromises);
+            setUploadedImages([...uploadedImages, ...uploadedUrls]);
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Failed to upload images. Please try again.');
+        } finally {
+            setUploading(false);
+        }
     };
 
     const removeImage = (index) => {
@@ -124,12 +154,17 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
                                 multiple
                                 onChange={handleImageUpload}
                                 className="file-input"
+                                disabled={uploading}
                             />
                             <label htmlFor="image-upload" className="upload-label">
                                 <UploadIcon size={32} />
                                 <div className="upload-text">
-                                    <div className="upload-title">Click to upload images</div>
-                                    <div className="upload-hint">or drag and drop</div>
+                                    <div className="upload-title">
+                                        {uploading ? 'Uploading...' : 'Click to upload images'}
+                                    </div>
+                                    <div className="upload-hint">
+                                        {uploading ? 'Please wait while images are being uploaded' : 'or drag and drop'}
+                                    </div>
                                 </div>
                             </label>
 
