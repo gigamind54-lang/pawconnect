@@ -8,14 +8,6 @@ export function UserProvider({ children }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [token, setToken] = useState(null);
 
-    // Load token and user from localStorage on mount
-    useEffect(() => {
-        const savedToken = localStorage.getItem('pawconnect_token');
-        if (savedToken) {
-            setToken(savedToken);
-            fetchCurrentUser(savedToken);
-        }
-    }, []);
 
     // Fetch current user from API
     const fetchCurrentUser = async (authToken) => {
@@ -41,6 +33,16 @@ export function UserProvider({ children }) {
             console.error('Fetch user error:', error);
         }
     };
+
+    // Load token and user from localStorage on mount
+    useEffect(() => {
+        const savedToken = localStorage.getItem('pawconnect_token');
+        if (savedToken) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setToken(savedToken);
+            fetchCurrentUser(savedToken);
+        }
+    }, []);
 
     const register = async (userData) => {
         try {
@@ -122,7 +124,8 @@ export function UserProvider({ children }) {
                 setCurrentUser(data.user);
                 return { success: true, user: data.user };
             } else {
-                return { success: false, error: data.error };
+                console.error('Update profile error:', data.error);
+                return { success: false, error: data.error || 'Failed to update profile' };
             }
         } catch (error) {
             console.error('Update profile error:', error);

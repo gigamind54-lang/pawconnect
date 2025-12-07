@@ -1,17 +1,11 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { HeartIcon, ShareIcon, MapPinIcon, BookmarkIcon, MessageIcon, UserIcon } from '@/components/Icons';
 import './AdoptionCard.css';
 
 export default function AdoptionCard({ post, onLike, onSave }) {
     const [isLiked, setIsLiked] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
-    const [likeCount, setLikeCount] = useState(post.likes || 0);
-
-    // Sync with updated post data from database
-    useEffect(() => {
-        setLikeCount(post.likes || 0);
-    }, [post.likes]);
 
     const handleLike = () => {
         if (onLike) onLike(post.id, !isLiked);
@@ -129,7 +123,7 @@ export default function AdoptionCard({ post, onLike, onSave }) {
 
             {/* Likes */}
             <div className="ig-likes">
-                <strong>{likeCount} likes</strong>
+                <strong>{post.likes || 0} likes</strong>
             </div>
 
             {/* Caption */}

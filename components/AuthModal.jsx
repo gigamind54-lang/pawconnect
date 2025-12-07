@@ -28,14 +28,34 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, error: exter
         setError('');
     };
 
-    const handleAvatarUpload = (e) => {
+    const [uploading, setUploading] = useState(false);
+
+    const handleAvatarUpload = async (e) => {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setAvatar(reader.result);
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+
+        setUploading(true);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const data = await response.json();
+            setAvatar(data.url); // Use the Vercel Blob URL
+        } catch (error) {
+            console.error('Avatar upload error:', error);
+            alert('Failed to upload avatar. Please try again.');
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -154,10 +174,11 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, error: exter
                                     accept="image/*"
                                     onChange={handleAvatarUpload}
                                     className="file-input"
+                                    disabled={uploading}
                                 />
                                 <label htmlFor="avatar-upload" className="upload-avatar-btn btn btn-secondary">
                                     <UploadIcon size={16} />
-                                    <span>Upload Avatar</span>
+                                    <span>{uploading ? 'Uploading...' : 'Upload Avatar'}</span>
                                 </label>
                             </div>
 

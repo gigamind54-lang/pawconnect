@@ -1,16 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MessageIcon, ThumbsUpIcon, EyeIcon, UserIcon } from '@/components/Icons';
 import './DiscussionCard.css';
 
 export default function DiscussionCard({ post, onLike }) {
     const [isLiked, setIsLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(post.likes || 0);
-
-    // Sync with updated post data
-    useEffect(() => {
-        setLikeCount(post.likes || 0);
-    }, [post.likes]);
 
     const handleLike = () => {
         if (onLike) onLike(post.id, !isLiked);
@@ -66,7 +60,7 @@ export default function DiscussionCard({ post, onLike }) {
 
             {/* Likes */}
             <div className="ig-likes">
-                <strong>{likeCount} likes</strong>
+                <strong>{post.likes || 0} likes</strong>
             </div>
 
             {/* Caption */}

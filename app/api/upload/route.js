@@ -34,10 +34,3 @@ export async function POST(request) {
         );
     }
 }
-
-// Allow multiple file uploads
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};

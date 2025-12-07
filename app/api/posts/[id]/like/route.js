@@ -6,7 +6,7 @@ import { getUserFromRequest } from '@/lib/auth';
  * POST /api/posts/[id]/like
  * Toggle like on a post
  */
-export async function POST(request, { params }) {
+export async function POST(request, context) {
     try {
         const user = getUserFromRequest(request);
         if (!user) {
@@ -16,7 +16,7 @@ export async function POST(request, { params }) {
             );
         }
 
-        const { id } = params;
+        const { id } = await context.params;
 
         // Check if already liked
         const existingLike = await sql`
@@ -73,9 +73,9 @@ export async function POST(request, { params }) {
  * GET /api/posts/[id]/like
  * Get like status and count for a post
  */
-export async function GET(request, { params }) {
+export async function GET(request, context) {
     try {
-        const { id } = params;
+        const { id } = await context.params;
         const user = getUserFromRequest(request);
 
         // Get like count

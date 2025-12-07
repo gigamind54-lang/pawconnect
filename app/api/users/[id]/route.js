@@ -6,7 +6,7 @@ import { getUserFromRequest } from '@/lib/auth';
  * PUT /api/users/[id]
  * Update user profile
  */
-export async function PUT(request, { params }) {
+export async function PUT(request, context) {
     try {
         const user = getUserFromRequest(request);
         if (!user) {
@@ -16,7 +16,7 @@ export async function PUT(request, { params }) {
             );
         }
 
-        const { id } = params;
+        const { id } = await context.params;
 
         // Verify user can only update their own profile
         if (user.id !== id) {

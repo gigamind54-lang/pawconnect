@@ -6,9 +6,9 @@ import { getUserFromRequest } from '@/lib/auth';
  * GET /api/posts/[id]
  * Get a single post by ID
  */
-export async function GET(request, { params }) {
+export async function GET(request, context) {
     try {
-        const { id } = params;
+        const { id } = await context.params;
 
         const result = await sql`
       SELECT 
@@ -74,7 +74,7 @@ export async function GET(request, { params }) {
  * DELETE /api/posts/[id]
  * Delete a post (must be owner)
  */
-export async function DELETE(request, { params }) {
+export async function DELETE(request, context) {
     try {
         const user = getUserFromRequest(request);
         if (!user) {
@@ -84,7 +84,7 @@ export async function DELETE(request, { params }) {
             );
         }
 
-        const { id } = params;
+        const { id } = await context.params;
 
         // Check if user owns the post
         const checkResult = await sql`

@@ -9,9 +9,11 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
     const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         petName: '',
+        species: '',
         breed: '',
         age: '',
         gender: 'Male',
+        size: 'Medium',
         location: '',
         urgent: false,
         title: '',
@@ -82,9 +84,11 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
         // Reset form
         setFormData({
             petName: '',
+            species: '',
             breed: '',
             age: '',
             gender: 'Male',
+            size: 'Medium',
             location: '',
             urgent: false,
             title: '',
@@ -205,6 +209,25 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
                                 />
                             </div>
 
+                            <div className="form-group">
+                                <label className="form-label" htmlFor="species">Species *</label>
+                                <select
+                                    id="species"
+                                    name="species"
+                                    value={formData.species}
+                                    onChange={handleChange}
+                                    className="form-select"
+                                    required
+                                >
+                                    <option value="">Select species</option>
+                                    <option value="Dog">Dog</option>
+                                    <option value="Cat">Cat</option>
+                                    <option value="Bird">Bird</option>
+                                    <option value="Rabbit">Rabbit</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
                             <div className="form-row">
                                 <div className="form-group">
                                     <label className="form-label" htmlFor="breed">Breed *</label>
@@ -248,6 +271,23 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
                                         <option value="Female">Female</option>
                                     </select>
                                 </div>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="size">Size</label>
+                                    <select
+                                        id="size"
+                                        name="size"
+                                        value={formData.size}
+                                        onChange={handleChange}
+                                        className="form-select"
+                                    >
+                                        <option value="Small">Small</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Large">Large</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="form-row">
                                 <div className="form-group">
                                     <label className="form-label" htmlFor="location-adoption">Location *</label>
                                     <input
