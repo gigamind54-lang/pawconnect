@@ -12,6 +12,8 @@ import MediaGallery from '@/components/MediaGallery';
 import CreatePostModal from '@/components/CreatePostModal';
 import AuthModal from '@/components/AuthModal';
 import UserProfile from '@/components/UserProfile';
+import MessagesInbox from '@/components/MessagesInbox';
+import ChatWindow from '@/components/ChatWindow';
 import './page.css';
 
 export default function Home() {
@@ -20,6 +22,9 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [messagesInboxOpen, setMessagesInboxOpen] = useState(false);
+  const [chatWindowOpen, setChatWindowOpen] = useState(false);
+  const [activeConversation, setActiveConversation] = useState(null);
   const [posts, setPosts] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const [activeTab, setActiveTab] = useState('home');
@@ -160,11 +165,7 @@ export default function Home() {
   };
 
   const handleLike = async (postId, liked) => {
-    if (!isAuthenticated) {
-      setAuthModalOpen(true);
-      return;
-    }
-
+    // Allow likes without authentication (anonymous likes)
     // Call API to toggle like
     const result = await toggleLike(postId, token);
 
@@ -199,6 +200,55 @@ export default function Home() {
     }
   };
 
+  const handleMessage = async (post) => {
+    if (!isAuthenticated) {
+      setAuthModalOpen(true);
+      return;
+    }
+
+    try {
+      // Create or get conversation with post author
+      const response = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ otherUserId: post.userId || post.user_id })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Set up conversation data with author info
+        const conversation = {
+          ...data.conversation,
+          other_username: post.author,
+          other_avatar: post.authorAvatar,
+          other_user_id: post.userId || post.user_id
+        };
+        setActiveConversation(conversation);
+        setChatWindowOpen(true);
+      }
+    } catch (error) {
+      console.error('Error starting conversation:', error);
+      alert('Failed to start conversation');
+    }
+  };
+
+  const handleOpenInbox = () => {
+    if (!isAuthenticated) {
+      setAuthModalOpen(true);
+      return;
+    }
+    setMessagesInboxOpen(true);
+  };
+
+  const handleOpenChat = (conversation) => {
+    setMessagesInboxOpen(false);
+    setActiveConversation(conversation);
+    setChatWindowOpen(true);
+  };
+
   const filteredPosts = filterType === 'all'
     ? posts
     : posts.filter(post => post.type === filterType);
@@ -214,7 +264,7 @@ export default function Home() {
     // API returns 'type' not 'category'
     switch (post.type) {
       case 'adoption':
-        return <AdoptionCard key={post.id} post={enrichedPost} onLike={handleLike} onSave={handleSave} />;
+        return <AdoptionCard key={post.id} post={enrichedPost} onLike={handleLike} onSave={handleSave} onMessage={handleMessage} />;
       case 'discussion':
         return <DiscussionCard key={post.id} post={enrichedPost} onLike={handleLike} />;
       case 'help':
@@ -234,6 +284,7 @@ export default function Home() {
         onOpenAuth={() => setAuthModalOpen(true)}
         onOpenProfile={() => setProfileModalOpen(true)}
         onCreatePost={handleOpenCreatePost}
+        onOpenMessages={handleOpenInbox}
       />
 
       <main className="main-container">
@@ -329,6 +380,20 @@ export default function Home() {
           isOpen={profileModalOpen}
         />
       )}
+
+      <MessagesInbox
+        isOpen={messagesInboxOpen}
+        onClose={() => setMessagesInboxOpen(false)}
+        currentUser={currentUser}
+        onOpenChat={handleOpenChat}
+      />
+
+      <ChatWindow
+        isOpen={chatWindowOpen}
+        onClose={() => setChatWindowOpen(false)}
+        conversation={activeConversation}
+        currentUser={currentUser}
+      />
     </>
   );
 }

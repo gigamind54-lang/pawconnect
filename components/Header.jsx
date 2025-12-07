@@ -1,9 +1,9 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { HeartIcon, UserIcon, PlusIcon } from '@/components/Icons';
+import { HeartIcon, UserIcon, PlusIcon, MessageIcon } from '@/components/Icons';
 import './Header.css';
 
-export default function Header({ currentUser, onLogout, onOpenAuth, onOpenProfile, onCreatePost }) {
+export default function Header({ currentUser, onLogout, onOpenAuth, onOpenProfile, onCreatePost, onOpenMessages }) {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const userMenuRef = useRef(null);
 
@@ -44,6 +44,17 @@ export default function Header({ currentUser, onLogout, onOpenAuth, onOpenProfil
                         <PlusIcon size={20} />
                         <span>Create</span>
                     </button>
+
+                    {currentUser && (
+                        <button
+                            onClick={onOpenMessages}
+                            className="ig-messages-btn"
+                            aria-label="Messages"
+                        >
+                            <MessageIcon size={20} />
+                            <span>Messages</span>
+                        </button>
+                    )}
 
                     {currentUser ? (
                         <div className="user-menu" ref={userMenuRef}>

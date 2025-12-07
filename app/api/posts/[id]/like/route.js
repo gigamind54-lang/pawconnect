@@ -9,26 +9,23 @@ import { getUserFromRequest } from '@/lib/auth';
 export async function POST(request, context) {
     try {
         const user = getUserFromRequest(request);
-        if (!user) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            );
-        }
-
         const { id } = await context.params;
+
+        // For anonymous users, use a session-based approach
+        // In production, you might want to use cookies or IP-based tracking
+        const userId = user ? user.id : 'anonymous';
 
         // Check if already liked
         const existingLike = await sql`
       SELECT id FROM likes 
-      WHERE user_id = ${user.id} AND post_id = ${id}
+      WHERE user_id = ${userId} AND post_id = ${id}
     `;
 
         if (existingLike.rows.length > 0) {
             // Unlike
             await sql`
         DELETE FROM likes 
-        WHERE user_id = ${user.id} AND post_id = ${id}
+        WHERE user_id = ${userId} AND post_id = ${id}
       `;
 
             // Get updated count
@@ -45,7 +42,7 @@ export async function POST(request, context) {
             // Like
             await sql`
         INSERT INTO likes (user_id, post_id)
-        VALUES (${user.id}, ${id})
+        VALUES (${userId}, ${id})
       `;
 
             // Get updated count

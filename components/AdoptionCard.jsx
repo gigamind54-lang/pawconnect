@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { HeartIcon, ShareIcon, MapPinIcon, BookmarkIcon, MessageIcon, UserIcon } from '@/components/Icons';
 import './AdoptionCard.css';
 
-export default function AdoptionCard({ post, onLike, onSave }) {
+export default function AdoptionCard({ post, onLike, onSave, onMessage }) {
     const [isLiked, setIsLiked] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
 
@@ -108,7 +108,11 @@ export default function AdoptionCard({ post, onLike, onSave }) {
                     </button>
                 </div>
                 <div className="ig-actions-right">
-                    <button className="ig-contact-btn-row" aria-label="Contact about adoption">
+                    <button
+                        className="ig-contact-btn-row"
+                        aria-label="Contact about adoption"
+                        onClick={() => onMessage && onMessage(post)}
+                    >
                         Send Message
                     </button>
                     <button
